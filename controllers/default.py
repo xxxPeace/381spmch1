@@ -25,7 +25,11 @@ def showList():
 
 @auth.requires_login()
 def addItem():
-    form = crud.create(db.forSaleList,next='showList')
+    crud.messages.submit_button = 'Place on market'
+    crud.settings.keepvalues = True
+    crud.settings.label_separator = ' :'
+    crud.settings.formstyle = 'ul'
+    form = crud.create(db.forSaleList)
     return locals()
 
 @auth.requires_login()
