@@ -1,0 +1,24 @@
+{{extend 'layout.html'}}
+<h1>Image:</h1>
+<div style="text-align:center">
+    <img width="600px" height="800"
+     src="{{=URL('download', args=image.Image)}}" />
+</div>
+<div class ="well">
+    <h2>
+        Seller name: {{=image.Seller}}
+    </h2>
+     <h2 style="color:red">
+        Pirec: {{=image.Priec}}$
+    </h2>
+    <ul style="list-style-type:none">
+        <li>Phome: {{=image.Seller}}</li>
+        <li>Email: {{=image.Email}}</li>
+        <li>Title: {{=image.Title}}</li>
+        <li>Category: {{=image.Category}}</li>
+        <li><p>
+            Description: {{=image.Description}}
+        </p></li>
+        <li>Status: {{=image.Status}}</li>
+    </ul>
+</div>
