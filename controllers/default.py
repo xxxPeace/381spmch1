@@ -16,9 +16,33 @@ crud = Crud(db)
 #    #return dict(images=images)
 #    return locals()
 def index():
-    listings = db().select(db.forSaleList.ALL, orderby = db.forSaleList.Title)
-    #image = db.forSaleList(request.args(0,cast=int)) or redirect(URL('index'))
+    show_all = request.args(0) == 'all'
+    if show_all:
+        button = A('Show available items', _class="btn btn-info", _href=URL('default', 'index'))
+    else:
+        button = A('Show all items', _class="btn btn-info", _href=URL('default', 'index', args=['all']))
+
+    if show_all:
+        q = db.forSaleList
+        listings = db().select(db.forSaleList.ALL, orderby = db.forSaleList.Title)
+    else:
+        q=(db.forSaleList.Status == True)
+        listings = db(db.forSaleList.Status == True).select(db.forSaleList.ALL, orderby = db.forSaleList.Title)
+
+    form = SQLFORM.grid(q,
+        args=request.args[:1],
+        fields=[db.forSaleList.Title,
+                    db.forSaleList.Seller,
+                    db.forSaleList.Description,
+               ],
+        editable=False, deletable=False,
+        paginate=10,
+        csv=False,
+        create=False,
+        searchable=False
+        )
     return locals()
+
 def showList():
     depts = db().select(db.forSaleList.ALL, orderby=db.forSaleList.Date)
     return locals()
@@ -30,6 +54,17 @@ def addItem():
     crud.settings.label_separator = ' :'
     crud.settings.formstyle = 'ul'
     form = crud.create(db.forSaleList)
+    return locals()
+
+@auth.requires_login()
+def add():
+    """Add a post."""
+    SQLFORM.messages.submit_button = 'Place on market'
+    form = SQLFORM(db.forSaleList)
+    if form.process().accepted:
+        # Successful processing.
+        session.flash = T("inserted")
+        redirect(URL('default', 'index'))
     return locals()
 
 @auth.requires_login()
