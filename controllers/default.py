@@ -20,7 +20,7 @@ def index():
     #image = db.forSaleList(request.args(0,cast=int)) or redirect(URL('index'))
     return locals()
 def showList():
-    depts = db().select(db.forSaleList.ALL, orderby=db.forSaleList.Title)
+    depts = db().select(db.forSaleList.ALL, orderby=db.forSaleList.Date)
     return locals()
 
 @auth.requires_login()
